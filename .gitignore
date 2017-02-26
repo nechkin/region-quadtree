@@ -12,3 +12,7 @@
 *.zip
 *.tar.gz
 *.rar
+
+target/
+.idea/
+
