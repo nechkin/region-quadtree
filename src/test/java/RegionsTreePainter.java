@@ -41,8 +41,8 @@ public class RegionsTreePainter {
                             treePane.repaint();
                         }
                     });*/
-                    treePane.viewPositionX = viewport.getX();
-                    treePane.viewPositionY = viewport.getY();
+//                    treePane.viewPositionX = viewport.getX();
+//                    treePane.viewPositionY = viewport.getY();
                     jScrollPane.addMouseWheelListener(new MouseAdapter() {
                         @Override
                         public void mouseWheelMoved(MouseWheelEvent e) {
@@ -82,9 +82,9 @@ public class RegionsTreePainter {
                             //prevMouseX
 
 
-                            int newX = (int)(mp.x * (-treePane.scale + 1f) + treePane.scale * viewport.getLocation().x);
-                            int newY = (int)(mp.y * (-treePane.scale + 1f) + treePane.scale * viewport.getLocation().y);
-                            treePane.setLocation(newX, newY);
+//                            int newX = (int)(mp.x * (-treePane.scale + 1f) + treePane.scale * viewport.getLocation().x);
+//                            int newY = (int)(mp.y * (-treePane.scale + 1f) + treePane.scale * viewport.getLocation().y);
+//                            treePane.setLocation(newX, newY);
 //                            treePane.prevMouseX = mp.x;
 
 //                            int newX = (int)((treePane.viewPositionX + mp.x) * treePane.scale + 0.5) - mp.x;
@@ -94,10 +94,21 @@ public class RegionsTreePainter {
 //                            treePane.viewPositionX = -newX;
 //                            treePane.viewPositionY = newY;
 
+                            // Mouse coordinates in the Viewport system
+                            int mouseX = mp.x - viewport.getX();
+                            int mouseY = mp.y - viewport.getY();
 
-                            //treePane.revalidate();
-                            //treePane.repaint();
-                            treePane.getParent().doLayout();
+                            // How much to scale relative to the previous Viewport's view (TreePane) size
+                            double relativeScale = treePane.scale / prevScale;
+
+                            // New coordinates of the Viewport's view (that is TreePane)
+                            int newX = mouseX - (int)((mouseX - treePane.getX() + 0.0) * relativeScale + 0.5);
+                            int newY = mouseY - (int)((mouseY - treePane.getY() + 0.0) * relativeScale + 0.5);
+                            treePane.setLocation(newX, newY);
+
+                            viewport.validate();
+//                            treePane.repaint();
+//                            treePane.getParent().doLayout();
                         }
                     });
 
@@ -166,10 +177,6 @@ public class RegionsTreePainter {
         private Graphics2D g2d;
 
         public double scale = 1;//e-5f;
-
-        public int viewPositionX = 0;
-        public int viewPositionY = 0;
-        public int prevMouseX = 0;
 
         public TreePane() throws IOException {
             super();
