@@ -1,3 +1,5 @@
+package org.ssn.quadtree;
+
 import org.junit.Test;
 
 import java.util.ArrayList;
