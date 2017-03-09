@@ -1,4 +1,7 @@
-package org.ssn.quadtree;
+import org.ssn.quadtree.Node;
+import org.ssn.quadtree.Point;
+import org.ssn.quadtree.QuadSpatialTree;
+import org.ssn.quadtree.Util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,15 +39,15 @@ public class RegionsTreePainter {
                     final TreePane treePane = new TreePane();
                     final JScrollPane jScrollPane = new JScrollPane(treePane);
 
-                    jScrollPane.addMouseWheelListener(new MouseWheelListener() {
+                    jScrollPane.getViewport().addMouseWheelListener(new MouseWheelListener() {
                         @Override
                         public void mouseWheelMoved(MouseWheelEvent e) {
-                            double delta = -0.5f * e.getPreciseWheelRotation();
-                            double prevScale = treePane.scale;
-                            treePane.scale += delta * treePane.scale;
+//                            double delta = -0.5f * e.getPreciseWheelRotation();
+//                            double prevScale = treePane.scale;
+//                            treePane.scale += delta * treePane.scale;
 
-                            //double d = (double) e.getWheelRotation() * 1.07;
-                            //treePane.scale -= 0.5 * d;
+                            double scaleFactor = e.getWheelRotation() > 0 ? 0.5 : 2.0;
+                            treePane.scale = scaleFactor * treePane.scale;
 
                             JViewport viewport = jScrollPane.getViewport();
                             java.awt.Point mp = e.getPoint();
@@ -54,11 +57,11 @@ public class RegionsTreePainter {
                             int mouseY = mp.y - viewport.getY();
 
                             // How much to scale relative to the previous Viewport's view (TreePane) size
-                            double relativeScale = treePane.scale / prevScale;
+                            //double scaleFactor = treePane.scale / prevScale;
 
                             // New coordinates of the Viewport's view (that is TreePane)
-                            int newX = mouseX - (int)((mouseX - treePane.getX() + 0.0) * relativeScale + 0.5);
-                            int newY = mouseY - (int)((mouseY - treePane.getY() + 0.0) * relativeScale + 0.5);
+                            int newX = mouseX - (int)((mouseX - treePane.getX() + 0.0) * scaleFactor + 0.5);
+                            int newY = mouseY - (int)((mouseY - treePane.getY() + 0.0) * scaleFactor + 0.5);
                             treePane.setLocation(newX, newY);
 
                             viewport.validate();
@@ -109,7 +112,7 @@ public class RegionsTreePainter {
 
         private Graphics2D g2d;
 
-        public double scale = 1;//e-5f;
+        public double scale = 1.0;//e-5f;
 
         public TreePane() throws IOException {
             super();

@@ -28,7 +28,7 @@ public class Util {
         final List<Point> poly = new ArrayList<Point>();
         final Class<?> clazz = Util.class;
 
-        try(InputStream in = clazz.getResourceAsStream(source);
+        try(InputStream in = clazz.getClassLoader().getResourceAsStream(source);
             BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
 
             for(String line; (line = br.readLine()) != null; ) {
