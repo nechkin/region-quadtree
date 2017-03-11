@@ -22,6 +22,8 @@ public class Node {
     private Node sw;
     private Node se;
 
+    private int level;
+
     public Node(double xc, double yc, double halfW, double halfH, Node parent) {
         this.xc = xc;
         this.yc = yc;
@@ -29,6 +31,11 @@ public class Node {
         this.halfH = halfH;
 
         this.parent = parent;
+        if (parent != null) {
+            level = parent.getLevel() + 1;
+        } else {
+            level = 0;
+        }
     }
 
     /**
@@ -271,9 +278,9 @@ public class Node {
         }
         if (uniqueValues.size() > 0) {
             if (getPolygonValues() == null) {
+                // polygon values list is null when there are no values assigned to the polygon
                 setPolygonValues(new ArrayList<>());
             }
-            // polygons list is null when there no polygons assigned
             getPolygonValues().addAll(uniqueValues);
         }
 
@@ -283,5 +290,13 @@ public class Node {
             getSe().inheritPolygons();
             getSw().inheritPolygons();
         }
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

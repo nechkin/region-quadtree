@@ -11,6 +11,8 @@ public class QuadSpatialTree {
     private double minDimensionSize;
     private boolean inheritPolygons = true;
 
+    private int depth = 0;
+
     public QuadSpatialTree() {
         // QuadSpatialTree has equally sized bins but for variable area sizes.
         // For lat 0.00898 grad ~ 1 km.
@@ -19,7 +21,6 @@ public class QuadSpatialTree {
         // Tree depth will be 16 (due to max lon being 360).
         // For lon on equator 0.0055 ~ 0.61 km, diminishing towards the poles.
         this(-180.000000, -90.000000, 180.000000, 90.000000, 0.005);
-//        this(-180.000000, -90.000000, 180.000000, 90.000000, 0.5);
     }
 
     public QuadSpatialTree(double minX, double minY, double maxX, double maxY,
@@ -111,6 +112,10 @@ public class QuadSpatialTree {
         node.setSw(new Node(xc - qw, yc - qh, qw, qh, node));
         node.setSe(new Node(xc + qw, yc - qh, qw, qh, node));
 
+        if (node.getLevel() + 1 > this.depth) {
+            this.setDepth(node.getLevel() + 1);
+        }
+
         return true;
     }
 
@@ -121,7 +126,7 @@ public class QuadSpatialTree {
      * @param node  start search from this node, doesn't check
      */
     public List<Node> searchFromNode(final Node node, final double lon, final double lat) {
-        List<Node> result = new ArrayList<Node>();
+        List<Node> result = new ArrayList<>();
         if (node.containsPoint(lon, lat)) {
             // Specified node contains the point
             navigate0(result, node, lon, lat);
@@ -169,7 +174,19 @@ public class QuadSpatialTree {
         return inheritPolygons;
     }
 
+    /**
+     * If inherit polygons is used, it is advised that Objects in Node#polygonValues share the same class and that
+     * it implements equals.
+     */
     public void setInheritPolygons(boolean inheritPolygons) {
         this.inheritPolygons = inheritPolygons;
+    }
+
+    public int getDepth() {
+        return depth;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 }
