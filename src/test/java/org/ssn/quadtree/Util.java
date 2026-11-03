@@ -46,7 +46,7 @@ public class Util {
         System.setProperty("org.geotools.referencing.forceXY", "true");
 
         final Class<?> clazz = Util.class;
-        URL url = clazz.getResource(source);
+        URL url = clazz.getClassLoader().getResource(source);
 
         Map connect = new HashMap();
         connect.put("url", url);
@@ -80,7 +80,7 @@ public class Util {
         System.setProperty("org.geotools.referencing.forceXY", "true");
 
         final Class<?> clazz = Util.class;
-        URL url = clazz.getResource(source);
+        URL url = clazz.getClassLoader().getResource(source);
 
         Map connect = new HashMap();
         connect.put("url", url);
